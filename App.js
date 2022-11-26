@@ -1,20 +1,61 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { configureStore } from "@reduxjs/toolkit";
+import { useFonts } from "expo-font";
+import {
+  OpenSans_400Regular as Regular,
+  OpenSans_600SemiBold as SemiBold,
+  OpenSans_400Regular_Italic as Italic,
+} from "@expo-google-fonts/open-sans";
+import {
+  PlayfairDisplay_400Regular as Serif,
+  PlayfairDisplay_600SemiBold as SerifBold,
+} from "@expo-google-fonts/playfair-display";
+
+import { fonts, colors } from "./app/components/Themes";
+
+import HomePage from "./app/HomePage";
+
+// Importing Entry Slice
+import EntrySlice from "./app/router/EntrySlice";
+import { Provider } from "react-redux";
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Regular,
+    SemiBold,
+    Italic,
+    Serif,
+    SerifBold,
+  });
+
+  let store = configureStore({
+    reducer: {
+      entries: EntrySlice,
+    },
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <SafeAreaView>
+        {fontsLoaded ? <HomePage /> : <SplashScreen />}
+      </SafeAreaView>
+    </Provider>
   );
 }
 
+const SplashScreen = () => {
+  return (
+    <View>
+      <Text style={{ color: colors.primaryVariant }}>YOUR DIARY</Text>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  container: {
+  splash: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: colors.secondary,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
