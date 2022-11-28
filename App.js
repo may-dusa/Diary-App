@@ -1,3 +1,4 @@
+import React from "react";
 import { StyleSheet, Text, View, SafeAreaView } from "react-native";
 import { configureStore } from "@reduxjs/toolkit";
 import { useFonts } from "expo-font";
@@ -15,7 +16,6 @@ import { fonts, colors } from "./app/components/Themes";
 
 import HomePage from "./app/HomePage";
 
-// Importing Entry Slice
 import EntrySlice from "./app/router/EntrySlice";
 import { Provider } from "react-redux";
 
@@ -36,16 +36,14 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <SafeAreaView>
-        {fontsLoaded ? <HomePage /> : <SplashScreen />}
-      </SafeAreaView>
+      {fontsLoaded ? <HomePage /> : <SplashScreen />}
     </Provider>
   );
 }
 
 const SplashScreen = () => {
   return (
-    <View>
+    <View style={styles.splash}>
       <Text style={{ color: colors.primaryVariant }}>YOUR DIARY</Text>
     </View>
   );

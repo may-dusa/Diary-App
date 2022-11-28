@@ -1,92 +1,55 @@
-import React, { useState, useRef } from "react";
-import { View, StyleSheet, TextInput, Platform } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { View, ScrollView, Keyboard, SafeAreaView } from "react-native";
 
-import { addEntry, getEntries } from "./router/EntrySlice";
-import { useDispatch, useSelector } from "react-redux";
+import { getEntries } from "./router/EntrySlice";
+import { useSelector } from "react-redux";
 
 import Header from "./components/Header";
-import Divider from "./components/Divider";
-
-import { colors, fonts } from "./components/Themes";
-import { TextButton } from "./components/Button";
+import Entry from "./components/Entry";
+import BottomTextField from "./BottomTextField";
 
 const HomePage = () => {
   let currentEntries = useSelector(getEntries);
 
+  let [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  function keyboardShow(e) {
+    setKeyboardHeight(e.endCoordinates.height);
+  }
+
+  function keyboardHide() {
+    setKeyboardHeight(0);
+  }
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener(
+      "keyboardWillShow",
+      keyboardShow
+    );
+    const hideSubsscription = Keyboard.addListener(
+      "keyboardWillHide",
+      keyboardHide
+    );
+
+    return function cleanup() {
+      showSubscription.remove();
+      hideSubsscription.remove();
+    };
+  }, []);
+
   return (
-    <View classname="main-container">
-      <Header title="Year 2022" />
-      <NewEntry />
-      {/* All entries divided by month */}
-    </View>
+    <SafeAreaView style={{ marginBottom: keyboardHeight + 16 }}>
+      <View style={{ height: "100%" }}>
+        <Header title="Year 2022" />
+        <ScrollView style={{ flex: 1 }}>
+          {Array.from(currentEntries).map((value, index) => (
+            <Entry key={index} date={value.date} entry={value.entry} />
+          ))}
+        </ScrollView>
+        <BottomTextField />
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default HomePage;
-
-const styles = StyleSheet.create({
-  newEntry: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-    margin: 16,
-  },
-  textInput: {
-    marginTop: 8,
-    padding: 0,
-    height: 120,
-  },
-  buttonGroup: {
-    flexDirection: "row",
-  },
-});
-
-const NewEntry = () => {
-  let [isFocus, setFocus] = useState(false);
-  let inputRef = useRef(null);
-
-  let entry = "";
-
-  let dispatch = useDispatch();
-
-  return (
-    <View style={styles.newEntry}>
-      <TextInput
-        ref={inputRef}
-        style={[fonts.italic, styles.textInput]}
-        selectionColor={colors.primaryDarkest}
-        placeholder="Pour your heart out..."
-        placeholderTextColor={colors.primaryDark}
-        multiline={true}
-        onFocus={() => {
-          setFocus(true);
-        }}
-        onChangeText={(e) => (entry = e)}
-      />
-      {isFocus ? (
-        <View style={styles.buttonGroup}>
-          <TextButton
-            title="Cancel"
-            transparent={true}
-            onPress={() => {
-              inputRef.current.blur();
-              setFocus(false);
-            }}
-          />
-          <View style={{ width: 12 }}></View>
-          <TextButton
-            title="Okay"
-            iconLeft="check"
-            onPress={() => {
-              dispatch(
-                addEntry({
-                  dt: new Date().getSeconds().toString(),
-                  entry: entry,
-                })
-              );
-            }}
-          />
-        </View>
-      ) : null}
-    </View>
-  );
-};

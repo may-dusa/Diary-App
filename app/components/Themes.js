@@ -6,34 +6,32 @@ const fonts = StyleSheet.create({
     fontSize: 16,
   },
   header: {
-    fontFamily: "SerifBold",
-    fontSize: 44,
-    lineHeight: 48,
+    fontFamily: "Regular",
+    fontSize: 32,
   },
   small: {
-    fontFamily: "Regular",
+    fontFamily: "SemiBold",
+    fontSize: 12,
+  },
+  serif: {
+    fontFamily: "Serif",
     fontSize: 16,
-  },
-  serifBig: {
-    fontFamily: "Serif",
-    fontSize: 32,
-    lineHeight: 32,
-  },
-  serifSmall: {
-    fontFamily: "Serif",
-    fontSize: 24,
-    lineHeight: 28,
   },
   italic: {
     fontFamily: "Italic",
+    fontSize: 16,
   },
 });
 
 const colors = {
   primaryDarkest: "rgb(15, 15, 15)",
   primaryDark: "rgb(52, 52, 52)",
-  primaryLightest: "rgb(239, 239, 239)",
+  primaryLight: "rgb(114, 114, 114)",
+  primaryLightest: "rgb(164, 164, 164)",
+  secondaryDark: "rgb(239, 239, 239)",
   secondary: "rgb(255, 255, 255)",
+  text: "rgb(52, 52, 52)",
+  subtext: "rgb(114, 114, 114)",
 };
 
 export { fonts, colors };

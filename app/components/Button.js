@@ -5,10 +5,26 @@ import Icons from "./Icons";
 
 import { colors, fonts } from "./Themes";
 
-const TextButton = ({ title, transparent, iconLeft, iconRight, onPress }) => {
-  let idle = transparent ? colors.secondary : colors.primaryDark;
-  let press = transparent ? colors.primaryLightest : colors.primaryDarkest;
-  let text = transparent ? colors.primaryDarkest : colors.secondary;
+const TextButton = ({
+  title,
+  transparent,
+  iconLeft,
+  iconRight,
+  onPress,
+  flexed,
+  subtle,
+}) => {
+  let idle = transparent
+    ? colors.secondary
+    : subtle
+    ? colors.primaryLightest
+    : colors.primaryDark;
+  let press = transparent
+    ? colors.primaryLightest
+    : subtle
+    ? colors.primaryLight
+    : colors.primaryDarkest;
+  let text = transparent ? colors.text : colors.secondary;
   return (
     <Pressable
       onPress={() => {
@@ -20,13 +36,16 @@ const TextButton = ({ title, transparent, iconLeft, iconRight, onPress }) => {
             backgroundColor: pressed ? press : idle,
           },
           styles.textButton,
+          flexed ? { flex: 1 } : null,
         ];
       }}
     >
       {iconLeft ? (
         <Icons name={iconLeft} color={text} style={styles.iconLeft} />
       ) : null}
-      <Text style={[fonts.small, { color: text }]}>{title}</Text>
+      {title ? (
+        <Text style={[fonts.body, { color: text }]}>{title}</Text>
+      ) : null}
       {iconRight ? (
         <Icons name={iconRight} color={text} style={styles.iconRight} />
       ) : null}
@@ -34,15 +53,48 @@ const TextButton = ({ title, transparent, iconLeft, iconRight, onPress }) => {
   );
 };
 
-export { TextButton };
+const IconButton = ({ icon, transparent, onPress, flexed, subtle }) => {
+  let idle = transparent
+    ? colors.secondary
+    : subtle
+    ? colors.primaryLightest
+    : colors.primaryDark;
+  let press = transparent
+    ? colors.primaryLightest
+    : subtle
+    ? colors.primaryLight
+    : colors.primaryDarkest;
+  let text = transparent ? colors.text : colors.secondary;
+  return (
+    <Pressable
+      onPress={() => {
+        onPress();
+      }}
+      style={({ pressed }) => {
+        return [
+          {
+            backgroundColor: pressed ? press : idle,
+          },
+          styles.textButton,
+          flexed ? { flex: 1 } : null,
+        ];
+      }}
+    >
+      <Icons name={icon} color={text} />
+    </Pressable>
+  );
+};
+
+export { TextButton, IconButton };
 
 const styles = StyleSheet.create({
   textButton: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
     borderRadius: 4,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
   },
   iconLeft: {
     marginRight: 8,

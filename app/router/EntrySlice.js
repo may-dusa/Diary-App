@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import DateBadge from "../components/DateBadge";
 
 const EntrySlice = createSlice({
   name: "Entries",
@@ -7,8 +8,8 @@ const EntrySlice = createSlice({
   },
   reducers: {
     addEntry(state, actions) {
-      let newEntries = state.entries.push({
-        dt: actions.payload.dt,
+      state.entries.push({
+        date: actions.payload.date,
         entry: actions.payload.entry,
       });
     },
